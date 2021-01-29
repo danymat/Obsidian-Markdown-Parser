@@ -1,5 +1,4 @@
 .DS_Store
-*.md
 .vscode/
 .venv
 *.zip
