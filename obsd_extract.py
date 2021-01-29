@@ -7,7 +7,7 @@ class Parser:
     def __init__(self, folderPath='.', tag=None):
         self._folderPath = folderPath
         self._tag = tag
-        self._regexFindLinks = '(?<=\[\[).*(?=\]\])'
+        self._regexFindLinks = '(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
         self._regexFindTags = '#\S+'
         self._mdFiles = []
         self._called = False
