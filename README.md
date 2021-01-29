@@ -1,6 +1,8 @@
 # Obsidian Extractor (obsd_extract)
 
-This script will create a zip of your vault, from the options you specified in.
+This script will create a zip of your vault, depending on the options you select.
+
+Made by Daniel Mathiot.
 
 ## Motives
 
