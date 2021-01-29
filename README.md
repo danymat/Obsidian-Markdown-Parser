@@ -20,7 +20,7 @@ At the moment, it supports:
 python obsd_extract.py vaultFolder --tag yourTag
 ```
 
-If you would like to follow links, add `-r` option ad the end:
+If you would like to follow links, add `-r` option at the end:
 
 ```bash
 python obsd_extract.py vaultFolder --tag yourTag -r
