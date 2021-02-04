@@ -13,6 +13,7 @@ I like to keep my vault with only one folder inside. That means, it's a pain to 
 At the moment, it supports:
 
 - Creating a zip file from a specified vault with a specific tag, with optional link following
+- Creating a zip file from the entire vault
 
 ## Usage
 
@@ -26,12 +27,18 @@ If you would like to follow links, add `-r` option at the end:
 python obsd_extract.py vaultFolder --tag yourTag -r
 ```
 
+If you would like to export all vault:
+
+```bash
+python obsd_extract.py vaultFolder
+```
+
 ## Roadmap
 
 New features i intent to add:
 
-- Exporting full vault
-- Exporting vault from multiple tags
+- [X] Exporting full vault
+- [ ] Exporting vault from multiple tags
 
 ## Contributing
 
