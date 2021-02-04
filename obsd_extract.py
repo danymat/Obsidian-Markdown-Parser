@@ -65,7 +65,9 @@ class Parser:
             print('Exporting to current path...')
         else:
             print(f'Exporting to {path}...')
-        zipObj = ZipFile(f'Exported_{self._tag}.zip', 'w')
+        name = 'All' if self._tag == None else self._tag
+
+        zipObj = ZipFile(f'Exported_{name}.zip', 'w')
         print('###### FILES FOUND ######')
         for file in files:
             print(file)
@@ -73,7 +75,7 @@ class Parser:
             zipObj.write(file, os.path.join('.',fileName)) # Not sure if it recreates subfolders
         zipObj.close()
         print('######################')
-        print('Exported!')
+        print(f'Exported! {len(self._addedFiles)}/{len(self._mdFiles)} notes')
 
     def _findSubFilesForAddedFiles(self):
         """Iteration to grow _addedFiles while i can"""
@@ -105,15 +107,22 @@ class Parser:
 
         * If recursive option, will find all linkedFiles in order to keep the clicks
         """
-        self._findFilesWithTag(self._tag)
+        if self._tag == None:
+            self._addedFiles = self._mdFiles
+        else:
+            self._findFilesWithTag(self._tag)
         if recursive:
             self._findSubFilesForAddedFiles()
         self._exportInZip(self._addedFiles)
 
 
-if len(argv) not in [4,5]: raise Exception("Usage: python3 vault_folder --tag your_tag")
+if len(argv) not in [2,4,5]: raise Exception("Usage: python3 obsd_extract.py vault_folder --tag your_tag (-r)")
 folder = argv[1]
-tag = argv[3]
+
+if '--tag' in argv:
+    tag = argv[argv.index('--tag') + 1]
+else:
+    tag=None
 
 parser = Parser(folderPath=folder, tag=tag)
 parser.run(recursive='-r' in argv)
