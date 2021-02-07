@@ -8,7 +8,7 @@ class Parser:
         self._folderPath = folderPath
         self._tag = tag
         self._regexFindLinks = '(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
-        self._regexFindTags = '#\S+'
+        self._regexFindTags = '(?:tags:\s\[.*?\])|(?:tags:\n(?:-\s\S*\n?)+)|(?:#\S+)'
         self._mdFiles = []
         self._called = False
         self._retrieveMarkdownFiles()
