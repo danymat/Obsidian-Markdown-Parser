@@ -44,7 +44,7 @@ class Parser:
         """Check if tag is in Current File
         """
         tags = set(re.findall(self._regexFindTags, self._currentFileAsHtml))
-        tags = [tag[1:] for tag in tags]
+        tags = [tag[1:] for tag in tags if tag[1:] in tags]
         return tag in tags
 
     def _findLinksInCurrentFile(self):
