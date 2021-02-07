@@ -1,5 +1,7 @@
 # Obsidian Extractor (obsd_extract)
 
+![(Github All Releases)](https://img.shields.io/github/downloads/danymat/Obsidian-Extractor/total)
+
 This script will create a zip of your vault, depending on the options you select.
 
 Made by Daniel Mathiot.
