@@ -35,12 +35,12 @@ class Parser:
 
     def findSubFilesForFiles(self, files: set):
         """Iteration to grow files while i can"""
-        while not self._grow(files):
+        while not self._growSubFiles(files):
             pass
         return files
 
 
-    def _grow(self, files):
+    def _growSubFiles(self, files):
         """Add new files found following links in files and stores them in files"""
         addedFiles = set()
         for file in files:
