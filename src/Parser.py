@@ -52,7 +52,6 @@ class Parser:
                 if link in file.fileName
             ]
             linkedFiles = set(linkedFiles) - files # Only keep not added files
-            print(linkedFiles)
             for link in linkedFiles:
                 addedFiles.add(link)
         for file in addedFiles:

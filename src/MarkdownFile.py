@@ -55,7 +55,6 @@ class MarkdownFile:
 
             result2 = result2.strip('\n')
             result2 = result2.split()
-            print(result2)
             for element in result2:
                 if element != '-':
                     tags.add(element)

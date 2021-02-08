@@ -4,8 +4,6 @@
 
 This script will create a zip of your vault, depending on the options you select.
 
-Made by Daniel Mathiot.
-
 ## Motives
 
 I like to keep my vault with only one folder inside. That means, it's a pain to copy only relevant files!
@@ -14,7 +12,7 @@ I like to keep my vault with only one folder inside. That means, it's a pain to 
 
 At the moment, it supports:
 
-- Creating a zip file from a specified vault with a specific tag, with optional link following
+- Creating a zip file from a specified vault with a specific tag, with optional link following (YAML support)
 - Creating a zip file from the entire vault
 
 ## Usage
@@ -35,12 +33,43 @@ If you would like to export all vault:
 python obsd_extract.py vaultFolder
 ```
 
+## Extended
+
+At the moment, I have implemented a basic parsing library.
+
+### Parser
+
+- Usage
+
+```python
+from src.Parser import Parser
+parser = Parser('/path/to/vault')
+```
+
+#### Attributes
+
+- `mdFiles` Array of MarkdownFile in vault
+#### Methods
+
+- `findSubFilesForFiles(files)` returns a set of `MarkdownFile` linked with the **set** of `MarkdownFile` specified
+- `searchFilesWithTag(tag)` returns a set of `MarkdownFile` with a specified tag
+
+### MarkdownFile
+
+#### Attributes
+
+- `fileName` file name (string) of the current markdown file, with `.md` extension (e.g `'file.md'`)
+- `path` relative path (string) of the current markdown file (e.g `'testVault/file.md'`)
+- `tags` set of tags in current file (e.g `{'tag2', 'tag3'}`)
+- `links` set of links in markdown files (e.g `{'file2'}`)
+
 ## Roadmap
 
-New features i intent to add:
+New features I intent to add:
 
 - [X] Exporting full vault
 - [ ] Exporting vault from multiple tags
+
 
 ## Contributing
 
