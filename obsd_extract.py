@@ -8,7 +8,7 @@ class Parser:
         self._folderPath = folderPath
         self._tag = tag
         self._regexFindLinks = r'(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
-        self._regexFindTags = r'(?:(?<=tags:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))|(?:(?<=#)(\S+))'
+        self._regexFindTags = r'(?:(?<=tags:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))|((?<=#)\S+)'
         self._mdFiles = []
         self._called = False
         self._retrieveMarkdownFiles()
@@ -47,24 +47,36 @@ class Parser:
         result1 = match.group(1)
         result2 = match.group(2)
         result3 = match.group(3)
+        #print(result1)
+        #print(result2)
+
         if result1 != None:
+            print(result1)
             result1 = result1.strip(',')
-            result1 = result1.split()
+            #print(result1)
+            result1 = result1.split(' ')
+            #print(result1)
             for element in result1:
                 if element == tag:
                     return tag
+
         elif result2 != None:
             result2 = result2.strip('\n')
             result2 = result2.split()
             result2_tags = []
+            #print(result2)
             for element in result2:
                 if element != '-':
                     result2_tags.append(element)
             for element in result2_tags:
                 if element == tag:
                     return tag
-        else:
-            if result3 == tag:
+            
+        simpleTags = re.compile(r"((?<=#)\S+)")
+        result3 = simpleTags.findall(self._currentFileAsHtml)
+        #print(result3)
+        for element in result3:
+            if element == tag:
                 return tag
 
     def _findLinksInCurrentFile(self):
