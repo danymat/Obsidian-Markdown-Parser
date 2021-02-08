@@ -2,61 +2,97 @@ import re
 import os
 from sys import argv
 from zipfile import ZipFile
+from typing import List
+
+class MarkdownFile:
+    def __init__(self, fileName, filePath):
+        self._regexFindTags = '#\S+'
+        self._regexFindLinks = '(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
+        self.fileName = fileName
+        self._path = filePath
+        self.tags = self._findTags()
+        self.links = self._findLinksInCurrentFile()
+
+    def _findTags(self) -> set:
+        file = self._openFile()
+        fStream = file.read()
+        file.close()
+        tags = set(re.findall(self._regexFindTags, fStream))
+        return [tag[1:] for tag in tags]
+
+
+    def _findLinksInCurrentFile(self) -> set:
+        """Return all links in the Current File"""
+        file = self._openFile()
+        fStream = file.read()
+        file.close()
+        return set(re.findall(self._regexFindLinks, fStream))
+
+    def _openFile(self):
+        """Open one file and store the content in _currentFileAsHtml"""
+        return open(self._path, "r", encoding="utf-8")
 
 class Parser:
-    def __init__(self, folderPath='.', tag=None):
+    def __init__(self, folderPath='.'):
         self._folderPath = folderPath
-        self._tag = tag
-        self._regexFindLinks = '(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
-        self._regexFindTags = '#\S+'
-        self._mdFiles = []
-        self._called = False
+        self.mdFiles = list[MarkdownFile]
         self._retrieveMarkdownFiles()
-        self._currentFileAsHtml = None
-        self._addedFiles = set()
+
 
     def _retrieveMarkdownFiles(self):
         """Directory traversal to find all .md files and stores them in _mdFiles
 
         Full credit goes to: https://github.com/archelpeg
         """
-        if self._called: raise Exception('Files have already been retrieved')
+        self.mdFiles = []
         for dirpath, dirnames, files in os.walk(self._folderPath):
             # print(f'Found directory: {dirpath}')
             for file_name in files:
                 if file_name.endswith('.md'):
-                    #print(file_name)
-                    # normalises path for current file system
-                    normalised_path = os.path.normpath(dirpath + "/" + file_name)
-                    self._mdFiles.append(normalised_path)
-        self._called = True
+                    normalised_path = os.path.normpath(dirpath + "/" + file_name) # normalises path for current file system
+                    file = MarkdownFile(file_name, normalised_path)
+                    self.mdFiles.append(file)
 
-    def _findFilesWithTag(self, tag=None):
+    def searchFilesWithTag(self, tag=None):
         """Find all files containing a specific tag
         """
-        for file in self._mdFiles:
-            self._openFileAsString(file)
-            if self._tagInCurrentFile(tag):
-                self._addedFiles.add(file)
+        files = set()
+        if tag == None:
+            return files
+        for file in self.mdFiles:
+            if tag in file.tags:
+                files.add(file)
+        return files
+
+    def findSubFilesForFiles(self, files: set):
+        """Iteration to grow files while i can"""
+        while not self._grow(files):
+            pass
+        return files
 
 
-    def _tagInCurrentFile(self, tag):
-        """Check if tag is in Current File
-        """
-        tags = set(re.findall(self._regexFindTags, self._currentFileAsHtml))
-        tags = [tag[1:] for tag in tags]
-        return tag in tags
+    def _grow(self, files):
+        """Add new files found following links in files and stores them in files"""
+        addedFiles = set()
+        for file in files:
+            linkedFiles = file.links
+            linkedFiles = [link+'.md' for link in linkedFiles] # Added .md at the end
+            linkedFiles = [file # Get the full links
+                for file in self.mdFiles
+                for link in linkedFiles
+                if link in file.fileName
+            ]
+            linkedFiles = set(linkedFiles) - files # Only keep not added files
+            for link in linkedFiles:
+                addedFiles.add(link)
+        for file in addedFiles:
+            files.add(file)
+        return len(addedFiles) == 0
 
-    def _findLinksInCurrentFile(self):
-        """Return all links in the Current File"""
-        return re.findall(self._regexFindLinks, self._currentFileAsHtml)
+class Extractor:
 
-    def _openFileAsString(self, fileName):
-        """Open one file and store the content in _currentFileAsHtml"""
-        with open(fileName, "r", encoding="utf-8") as input_file:
-            self._currentFileAsHtml = input_file.read()
-
-    def _exportInZip(self, files, path=None):
+    @classmethod
+    def _exportInZip(cls, files, zipName, path=None):
         """Export all files in zip, if path not specified, export to current location"""
         if len(files) == 0:
             print('No files found, exiting now'); return
@@ -65,55 +101,17 @@ class Parser:
             print('Exporting to current path...')
         else:
             print(f'Exporting to {path}...')
-        name = 'All' if self._tag == None else self._tag
 
-        zipObj = ZipFile(f'Exported_{name}.zip', 'w')
+        zipObj = ZipFile(f'Exported_{zipName}.zip', 'w')
         print('###### FILES FOUND ######')
         for file in files:
-            print(file)
-            fileName = file.rsplit(f'{self._folderPath}/', 1)[-1]
-            zipObj.write(file, os.path.join('.',fileName)) # Not sure if it recreates subfolders
+            print(file.fileName)
+            zipObj.write(file.fileName, os.path.join('.',file.fileName)) # Not sure if it recreates subfolders
         zipObj.close()
         print('######################')
-        print(f'Exported! {len(self._addedFiles)}/{len(self._mdFiles)} notes')
-
-    def _findSubFilesForAddedFiles(self):
-        """Iteration to grow _addedFiles while i can"""
-        while not self._grow():
-            pass
+        print(f'Exported! {len(files)} notes')
 
 
-    def _grow(self):
-        """Add new files found following links in _addedFiles"""
-        addedFiles = set()
-        for file in self._addedFiles:
-            self._openFileAsString(file)
-            linkedFiles = self._findLinksInCurrentFile() # all links in file
-            linkedFiles = [link+'.md' for link in linkedFiles] # Added .md at the end
-            linkedFiles = [file # Get the full links
-                for file in self._mdFiles
-                for link in linkedFiles
-                if link in file
-            ]
-            linkedFiles = set(linkedFiles) - self._addedFiles # Only keep not added files
-            for link in linkedFiles:
-                addedFiles.add(link)
-        for file in addedFiles:
-            self._addedFiles.add(file)
-        return len(addedFiles) == 0
-
-    def run(self, recursive=False):
-        """Run the script
-
-        * If recursive option, will find all linkedFiles in order to keep the clicks
-        """
-        if self._tag == None:
-            self._addedFiles = self._mdFiles
-        else:
-            self._findFilesWithTag(self._tag)
-        if recursive:
-            self._findSubFilesForAddedFiles()
-        self._exportInZip(self._addedFiles)
 
 
 if len(argv) not in [2,4,5]: raise Exception("Usage: python3 obsd_extract.py vault_folder --tag your_tag (-r)")
@@ -124,5 +122,16 @@ if '--tag' in argv:
 else:
     tag=None
 
-parser = Parser(folderPath=folder, tag=tag)
-parser.run(recursive='-r' in argv)
+parser = Parser(folderPath=folder)
+
+files = parser.searchFilesWithTag(tag)
+print(files)
+if len(files) == 0:
+    files = []
+
+if '-r' in argv:
+    files = parser.findSubFilesForFiles(files)
+
+name = tag if tag else 'All'
+print(files)
+Extractor._exportInZip(files, name)
