@@ -8,7 +8,7 @@ class Parser:
         self._folderPath = folderPath
         self._tag = tag
         self._regexFindLinks = r'(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
-        self._regexFindTags = r'(?:(?<=tags:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))|((?<=#)\S+)'
+        self._regexFindTags = r'(?:(?<=tags:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))'
         self._mdFiles = []
         self._called = False
         self._retrieveMarkdownFiles()
@@ -44,18 +44,15 @@ class Parser:
         """Check if tag is in Current File
         """
         match = re.search(self._regexFindTags, self._currentFileAsHtml)
-        result1 = match.group(1)
-        result2 = match.group(2)
-        result3 = match.group(3)
-        #print(result1)
-        #print(result2)
+        result1 = None
+        result2 = None
+        if match != None:
+            result1 = match.group(1)
+            result2 = match.group(2)
 
         if result1 != None:
-            #print(result1)
-            #new_result1 = result1.strip()
-            #print(new_result1)
             new_result1 = result1.split(',')
-            print(new_result1)
+            #print(new_result1)
             for element in new_result1:
                 if element.strip() == tag:
                     return tag
