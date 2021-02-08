@@ -48,8 +48,8 @@ class MarkdownFile:
 
         # Find all tags in YAML with format
         # tags:
-        # -tag1
-        # -tag2
+        # - tag1
+        # - tag2
         # ...
         elif result2 != None:
 
