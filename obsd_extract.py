@@ -7,8 +7,8 @@ class Parser:
     def __init__(self, folderPath='.', tag=None):
         self._folderPath = folderPath
         self._tag = tag
-        self._regexFindLinks = '(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
-        self._regexFindTags = '(?:tags:\s\[.*?\])|(?:tags:\n(?:-\s\S*\n?)+)|(?:#\S+)'
+        self._regexFindLinks = r'(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
+        self._regexFindTags = r'(?:(?<=tags:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))|(?:(?<=#)(\S+))'
         self._mdFiles = []
         self._called = False
         self._retrieveMarkdownFiles()
@@ -43,10 +43,29 @@ class Parser:
     def _tagInCurrentFile(self, tag):
         """Check if tag is in Current File
         """
-        tags = set(re.findall(self._regexFindTags, self._currentFileAsHtml))
-        for tag in tags:
-            if self._tag in tag:
-                return self._tag
+        match = re.search(self._regexFindTags, self._currentFileAsHtml)
+        result1 = match.group(1)
+        result2 = match.group(2)
+        result3 = match.group(3)
+        if result1 != None:
+            result1 = result1.strip(',')
+            result1 = result1.split()
+            for element in result1:
+                if element == tag:
+                    return tag
+        elif result2 != None:
+            result2 = result2.strip('\n')
+            result2 = result2.split()
+            result2_tags = []
+            for element in result2:
+                if element != '-':
+                    result2_tags.append(element)
+            for element in result2_tags:
+                if element == tag:
+                    return tag
+        else:
+            if result3 == tag:
+                return tag
 
     def _findLinksInCurrentFile(self):
         """Return all links in the Current File"""
