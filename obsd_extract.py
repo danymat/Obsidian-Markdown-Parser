@@ -51,13 +51,13 @@ class Parser:
         #print(result2)
 
         if result1 != None:
-            print(result1)
-            result1 = result1.strip(',')
             #print(result1)
-            result1 = result1.split(' ')
-            #print(result1)
-            for element in result1:
-                if element == tag:
+            #new_result1 = result1.strip()
+            #print(new_result1)
+            new_result1 = result1.split(',')
+            print(new_result1)
+            for element in new_result1:
+                if element.strip() == tag:
                     return tag
 
         elif result2 != None:
