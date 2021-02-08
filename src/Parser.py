@@ -34,7 +34,7 @@ class Parser:
         return files
 
     def findSubFilesForFiles(self, files: set):
-        """Iteration to grow files while i can"""
+        """Iteration to grow files while it can"""
         while not self._growSubFiles(files):
             pass
         return files

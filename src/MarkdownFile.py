@@ -10,6 +10,23 @@ class MarkdownFile:
         self.links = self._findLinksInCurrentFile()
 
     def _findTags(self) -> set:
+        """Return a set of all tags in current file
+
+        In order to retrieve a tag, it must be in one of the 3 formats:
+        1. Simple format
+        ```
+        #tag1
+        ```
+        2. YAML array format
+        ```
+        tags: [tag1]
+        ```
+        3. Yaml list format
+        ```
+        tags:
+        - tag1
+        ```
+        """
         tag= None
         tags = set()
         file = self._openFile()
@@ -52,12 +69,12 @@ class MarkdownFile:
 
 
     def _findLinksInCurrentFile(self) -> set:
-        """Return all links in the Current File"""
+        """Return the set of all links in the Current File (fileNames)"""
         file = self._openFile()
         fStream = file.read()
         file.close()
         return set(re.findall(self._regexFindLinks, fStream))
 
     def _openFile(self):
-        """Open one file and store the content in _currentFileAsHtml"""
+        """Open markdown file"""
         return open(self.path, "r", encoding="utf-8")
