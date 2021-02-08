@@ -63,6 +63,26 @@ parser = Parser('/path/to/vault')
 - `tags` set of tags in current file (e.g `{'tag2', 'tag3'}`)
 - `links` set of links in markdown files (e.g `{'file2'}`)
 
+### Examples
+
+```python
+parser = Parser('test/testVault')
+```
+
+- Find all fileNames that doesn't have a tag
+
+```python
+fileWithoutTags = [file.fileName for file in parser.mdFiles if len(file.tags) == 0]
+```
+
+- Find all files that have `tag1` in them
+
+```python
+filesWithSpecificTag = [file for file in parser.mdFiles if 'tag1' in file.tags]
+# OR
+filesWithSpecificTag = parser.searchFilesWithTag('tag1')
+```
+
 ## Roadmap
 
 New features I intent to add:
