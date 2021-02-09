@@ -1,8 +1,8 @@
 import re
 
 class YamlParser:
-    def __init__(self, fStream):
-        self._regexFindYAML = r'(?:(?<=tags:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))'
+    def __init__(self, key, fStream):
+        self._regexFindYAML = rf'(?:(?<={key}:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))'
         self.fStream = fStream
         
     def _findValueInYAML(self) -> set:
@@ -19,6 +19,7 @@ class YamlParser:
         - value1
         ```
         """
+        # all the values are stored in this set
         self.values = set()
 
 

@@ -28,6 +28,8 @@ class MarkdownFile:
         - tag1
         ```
         """
+        # this block needs to be set by each method that wants to retrieve YAML
+        # values; when instantiating in YamlParser I had circular dependencys
         value = None
         values = set()
         file = MarkdownFile
@@ -35,19 +37,23 @@ class MarkdownFile:
         self.fStream = file.read()
         file.close()
 
-        # instantiate class
-        findYAMLTags = YamlParser(self.fStream)
+        # instantiate YamlParser class
+        # the only thing passed to the class are the contents from above of every looped
+        # file in the Parser class (example in .searchFilesWithTag())
+        # the key has to be given as first argument in a string without the colon
+        findYAMLTags = YamlParser("tags", self.fStream)
         # execute function to find tag in YamlParser
         values = findYAMLTags._findValueInYAML()
 
         # find simple tags
         simpleTags = re.compile(r"((?<=#)\S+)") # Find all tags in file with format #tag1 #tag2 ...
-        # use opened file from instantiated YamlParser class
-        result3 = simpleTags.findall(findYAMLTags.fStream)
+        result3 = simpleTags.findall(self.fStream)
         for tag in result3:
-            # add simple tags to set() in YamlParser class
+            # add simple tags to set()
             values.add(tag)
 
+        # a set of all values (here: tags) is returned; a method in
+        # Parser.py then checks if the entered tag is part of it
         return values
 
 
