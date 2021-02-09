@@ -2,7 +2,7 @@ import re
 
 class YamlParser:
     def __init__(self, key, fStream):
-        self._regexFindYAML = rf'(?:(?<={key}:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))'
+        self._regexFindYAML = rf'(?:(?<={key}:\s\[)(.+?)(?=\]))|(?:(?<={key}:\n)((?:-\s\S*\n?)+))'
         self.fStream = fStream
         
     def _findValueInYAML(self) -> set:
