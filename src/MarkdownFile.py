@@ -44,15 +44,14 @@ class MarkdownFile:
         if result1 != None: # Find all tags in YAML with format tags: [tag1, tag2,...]
             new_result1 = result1.split(',')
             for tag in new_result1:
-                tags.add(tag)
+                tags.add(tag.strip())
 
         # Find all tags in YAML with format
         # tags:
-        # -tag1
-        # -tag2
+        # - tag1
+        # - tag2
         # ...
         elif result2 != None:
-
             result2 = result2.strip('\n')
             result2 = result2.split()
             for element in result2:

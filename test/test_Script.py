@@ -5,7 +5,7 @@ import os
 
 def testMarkdownsRetrieval():
     parser = Parser('./test/testVault')
-    assert len(parser.mdFiles) == 5
+    assert len(parser.mdFiles) == 6
 
 def testMarkdownTags():
     def nbFilesWithTag(parser, tag):
