@@ -42,7 +42,8 @@ class MarkdownFile:
         # the key has to be given as first argument in a string without the colon
         findYAMLTags = YamlParser("tags", self.fStream)
         # execute function to find tag in YamlParser
-        values = findYAMLTags._findValueInYAML()
+        values = findYAMLTags._findAllYAML()
+        print(values)
 
         # find simple tags
         simpleTags = re.compile(r"((?<=#)\S+)") # Find all tags in file with format #tag1 #tag2 ...
@@ -53,6 +54,7 @@ class MarkdownFile:
 
         # a set of all values (here: tags) is returned; a method in
         # Parser.py then checks if the entered tag is part of it
+        print(values)
         return values
 
 
