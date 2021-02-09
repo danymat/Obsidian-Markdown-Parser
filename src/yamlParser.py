@@ -1,11 +1,11 @@
 import re
-from src.MarkdownFile import MarkdownFile
 
 class YamlParser:
-    def __init__(self):
+    def __init__(self, fStream):
         self._regexFindYAML = r'(?:(?<=tags:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))'
+        self.fStream = fStream
         
-    def _findValueInYAML(self, value=None) -> set:
+    def _findValueInYAML(self) -> set:
         """Return a set of all values stored in YAML
 
         In order to retrieve a value, it must be in one of the 2 formats:
@@ -19,14 +19,10 @@ class YamlParser:
         - value1
         ```
         """
-        self.value = value
         self.values = set()
-        file = MarkdownFile
-        file = self._openFile()
-        fStream = file.read()
-        file.close()
 
-        match = re.search(self._regexFindYAML, fStream)
+
+        match = re.search(self._regexFindYAML, self.fStream)
         result1 = None
         result2 = None
 
@@ -50,3 +46,5 @@ class YamlParser:
             for element in result2:
                 if element != '-':
                     self.values.add(element)
+
+        return self.values

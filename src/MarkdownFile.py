@@ -1,8 +1,10 @@
 import re
+from src.yamlParser import YamlParser
 
 class MarkdownFile:
     def __init__(self, fileName, filePath):
         self._regexFindLinks = r'(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
+        self._regexFindYAML = r'(?:(?<=tags:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))'
         self.fileName = fileName
         self.path = filePath
         self.tags = self._findTags()
@@ -26,43 +28,27 @@ class MarkdownFile:
         - tag1
         ```
         """
-        tag= None
-        tags = set()
+        value = None
+        values = set()
+        file = MarkdownFile
         file = self._openFile()
-        fStream = file.read()
+        self.fStream = file.read()
         file.close()
 
-        match = re.search(self._regexFindTags, fStream)
-        result1 = None
-        result2 = None
+        # instantiate class
+        findYAMLTags = YamlParser(self.fStream)
+        # execute function to find tag in YamlParser
+        values = findYAMLTags._findValueInYAML()
 
-        if match != None:
-            result1 = match.group(1)
-            result2 = match.group(2)
-
-        if result1 != None: # Find all tags in YAML with format tags: [tag1, tag2,...]
-            new_result1 = result1.split(',')
-            for tag in new_result1:
-                tags.add(tag.strip())
-
-        # Find all tags in YAML with format
-        # tags:
-        # - tag1
-        # - tag2
-        # ...
-        elif result2 != None:
-            result2 = result2.strip('\n')
-            result2 = result2.split()
-            for element in result2:
-                if element != '-':
-                    tags.add(element)
-
-        simpleTags = re.compile(r"((?<=#)\S+)") # # Find all tags in file with format #tag1 #tag2 ...
-        result3 = simpleTags.findall(fStream)
+        # find simple tags
+        simpleTags = re.compile(r"((?<=#)\S+)") # Find all tags in file with format #tag1 #tag2 ...
+        # use opened file from instantiated YamlParser class
+        result3 = simpleTags.findall(findYAMLTags.fStream)
         for tag in result3:
-            tags.add(tag)
+            # add simple tags to set() in YamlParser class
+            values.add(tag)
 
-        return tags
+        return values
 
 
     def _findLinksInCurrentFile(self) -> set:
