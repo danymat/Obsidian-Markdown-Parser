@@ -12,11 +12,11 @@ class YamlParser:
         #print(match)
         if match != None:
             self.result = match.group()
-            print(self.result)
             #print(self.result)
-            self._findValueInYAML()
+            return self._findValueInYAML()
         else:
-            return set()
+            return None
+
 
     def _findValueInYAML(self) -> set:
         """Return a set of all values stored in YAML
@@ -70,6 +70,6 @@ class YamlParser:
                 if element != '-':
                     element = element.strip('\"')
                     self.values.add(element)
-            print(self.values)
+            #print(self.values)
         #print(self.values)
         return self.values
