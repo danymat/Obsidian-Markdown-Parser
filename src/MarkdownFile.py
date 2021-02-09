@@ -3,7 +3,6 @@ import re
 class MarkdownFile:
     def __init__(self, fileName, filePath):
         self._regexFindLinks = r'(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
-        self._regexFindTags = r'(?:(?<=tags:\s\[)(.+?)(?=\]))|(?:(?<=tags:\n)((?:-\s\S*\n?)+))'
         self.fileName = fileName
         self.path = filePath
         self.tags = self._findTags()
