@@ -22,7 +22,50 @@ class YamlParser:
             return None
 
     def iterateYAML(self):
-        pass
+        # all the values are stored in this set
+        self.values = set()
+
+        # matches the entry associated with the given key in the YAML from ._findAllYAML
+        match = re.finditer(self._regexIterateYAML, self.result)
+        result1 = None
+        result2 = None
+        result3 = None
+        result4 = None
+
+
+        for dict in next(match):
+
+            if match != None:
+                # matches key in array syntax
+                result1 = dict.group(1)
+                # matches values in array syntax
+                result2 = dict.group(2)
+                # matches key in list syntax
+                result3 = dict.group(3)
+                # matches values in list syntax
+                result4 = dict.group(4)
+
+
+            elif result2 != None: # Find all values in YAML with format key: [value1, value2,...]
+                new_result2 = result2.split(',')
+                for element in new_result2:
+                    element = element.strip('\"')
+                    element = element.strip()
+                    self.values.add(element)
+            # Find all values in YAML with format
+            # key:
+            # - value1
+            # - value2
+            # ...
+            elif result4 != None:
+                result4 = result4.split()
+                for element in result2:
+                    if element != '-':
+                        element = element.strip('\"')
+                        self.values.add(element)
+
+            elif StopIteration:
+                return self.values
 
 
     def _findValueInYAML(self) -> set:
