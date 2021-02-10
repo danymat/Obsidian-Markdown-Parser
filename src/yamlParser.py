@@ -4,18 +4,25 @@ class YamlParser:
     def __init__(self, key, fStream):
         self._regexAllYAML = r'(?<=---\n)(?:.*\n)+(?=---)'
         self._regexFindKey = rf'(?:(?<={key}:).*?\[(.+?)(?=\]))|(?:(?<={key}:).*\n((?:-\s.*\n?)+))'
+        self._regexIterateYAML = r'(?:(\S+?):.*?\[(.+?)(?=\]))|(?:(\S+?):.*\n((?:-\s.*\n?)+))'
         self.fStream = fStream
         self.result = None
         
-    def _findAllYAML(self):
+    def _findAllYAML(self, method):
         # matches everything inside the frontmatter YAML (at least the first
         # occurence of --- this is matched ---)
         match = re.search(self._regexAllYAML, self.fStream)
-        if match != None:
+        if match != None and method == "findvalue":
             self.result = match.group()
             return self._findValueInYAML()
+        elif match != None and method == "iterate":
+            self.result = match.group()
+            return self._iterateYAMl()
         else:
             return None
+
+    def iterateYAML(self):
+        pass
 
 
     def _findValueInYAML(self) -> set:
