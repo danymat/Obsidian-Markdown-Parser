@@ -29,8 +29,6 @@ class MarkdownFile:
         """
         # this block needs to be set by each method that wants to retrieve YAML
         # values; when instantiating in YamlParser I had circular dependencys
-        value = None
-        values = set()
         file = MarkdownFile
         file = self._openFile()
         self.fStream = file.read()
@@ -41,8 +39,15 @@ class MarkdownFile:
         # file in the Parser class (example in .searchFilesWithTag())
         # the key has to be given as first argument in a string without the colon
         findYAMLTags = YamlParser("tags", self.fStream)
-        # execute function to find tag in YamlParser
-        values = findYAMLTags._findValueInYAML()
+        # execute method to find tag in YamlParser; in the called method another
+        # method is called to find the specific tags
+        # returns None if no YAML is found in a file
+        values = findYAMLTags._findAllYAML()
+        # if this is the case, then values is made a set so that the simple tags
+        # can be added to it, because one can't add to NoneType
+        if values == None:
+            values = set()
+
 
         # find simple tags
         simpleTags = re.compile(r"((?<=#)\S+)") # Find all tags in file with format #tag1 #tag2 ...
