@@ -28,7 +28,7 @@ class YamlParser:
     def _iterateYAML(self):
         # matches the entry associated with the given key in the YAML from ._findAllYAML
         match = re.findall(self._regexIterateYAML, self.result)
-        print(match)
+        #print(match)
         #print(next(match))
         #iterSet = set(next(match))
         self.yamlDict = {}
@@ -51,15 +51,15 @@ class YamlParser:
                     # matches values in list syntax
                     result4 = pair[-1]
 
-                    print(result1)
-                    print(result2)
-                    print(result3)
-                    print(result4)
+                    #print(result1)
+                    #print(result2)
+                    #print(result3)
+                    #print(result4)
 
-                    if result3 != '':
+                    if result3 == '':
                         #if result2 == '':
                         #   self.yamlDict.update({result1 : None}) 
-                        if result4 != '': # Find all values in YAML with format key: [value1, value2,...]
+                        if result4 == '': # Find all values in YAML with format key: [value1, value2,...]
                             valueSet = set()
                             new_result2 = result2.split(',')
                             for element in new_result2:
@@ -73,19 +73,19 @@ class YamlParser:
                     # - value1
                     # - value2
                     # ...
-                    elif result1 != '':
+                    elif result1 == '':
                         #if result4 == '':
                         #    self.yamlDict.update({result3 : None})
-                        if result2 != '':
+                        if result2 == '':
                             valueSet = set()
                             result4 = result4.split()
                             for element in result2:
                                 if element != '-':
                                     element = element.strip('\"')
                                     valueSet.add(element)
-
+                            self.yamlDict.update({result3 : valueSet})
                     
-                    return self.yamlDict
+            return self.yamlDict
 
 
     def _findValueInYAML(self) -> set:

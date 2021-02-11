@@ -52,6 +52,7 @@ class MarkdownFile:
         # quick test for yaml iterator
         yamlIterator = YamlParser(self.fStream)
         print(yamlIterator._findAllYAML("iterate"))
+        print(self.fileName)
 
         # find simple tags
         simpleTags = re.compile(r"((?<=#)\S+)") # Find all tags in file with format #tag1 #tag2 ...
