@@ -36,7 +36,6 @@ class YamlParser:
                 result2 = None
                 result3 = None
                 result4 = None
-                #print(pair)
 
                 if pair != None:
                     # matches key in array syntax
