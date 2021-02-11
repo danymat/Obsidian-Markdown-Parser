@@ -60,9 +60,6 @@ class YamlParser:
                                 for value in values:
                                     string += value
                                 valueSet.add(string)
-                                #element = element.strip('\"')
-                                #element = element.strip()
-                                #valueSet.add(element)
                         self.yamlDict.update({result1 : valueSet})
 
                     # yaml list in current pair
