@@ -48,6 +48,10 @@ class MarkdownFile:
         if values == None:
             values = set()
 
+        #############################
+        # quick test for yaml iterator
+        yamlIterator = YamlParser(self.fStream)
+        print(yamlIterator._findAllYAML("iterate"))
 
         # find simple tags
         simpleTags = re.compile(r"((?<=#)\S+)") # Find all tags in file with format #tag1 #tag2 ...

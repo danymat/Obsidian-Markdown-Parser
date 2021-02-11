@@ -20,60 +20,71 @@ class YamlParser:
             return self._findValueInYAML()
         elif match != None and method == "iterate":
             self.result = match.group()
-            return self._iterateYAMl()
+            #print(self.result)
+            return self._iterateYAML()
         else:
             return None
 
-    def iterateYAML(self):
+    def _iterateYAML(self):
         # matches the entry associated with the given key in the YAML from ._findAllYAML
-        match = re.finditer(self._regexIterateYAML, self.result)
-        result1 = None
-        result2 = None
-        result3 = None
-        result4 = None
+        match = re.findall(self._regexIterateYAML, self.result)
+        print(match)
+        #print(next(match))
+        #iterSet = set(next(match))
+        self.yamlDict = {}
 
+        if match != None:
+            for pair in match:
+                # the results of the match groups will be saved here     
+                result1 = None
+                result2 = None
+                result3 = None
+                result4 = None
 
-        for dict in next(match):
+                if pair != None:
+                    # matches key in array syntax
+                    result1 = pair[0]
+                    # matches values in array syntax
+                    result2 = pair[1]
+                    # matches key in list syntax
+                    result3 = pair[-2]
+                    # matches values in list syntax
+                    result4 = pair[-1]
 
-            if match != None:
-                # matches key in array syntax
-                result1 = dict.group(1)
-                # matches values in array syntax
-                result2 = dict.group(2)
-                # matches key in list syntax
-                result3 = dict.group(3)
-                # matches values in list syntax
-                result4 = dict.group(4)
+                    print(result1)
+                    print(result2)
+                    print(result3)
+                    print(result4)
 
-                if result1 != None:
-                    if result2 == None:
-                       self.yamlDict.update({result1 : None}) 
-                    elif result2 != None: # Find all values in YAML with format key: [value1, value2,...]
-                        valueSet = set()
-                        new_result2 = result2.split(',')
-                        for element in new_result2:
-                            element = element.strip('\"')
-                            element = element.strip()
-                            valueSet.add(element)
-                        self.yamlDict.update({result1 : valueSet})
-
-                # Find all values in YAML with format
-                # key:
-                # - value1
-                # - value2
-                # ...
-                elif result3 != None:
-                    if result4 == None:
-                        self.yamlDict.update({result3 : None})
-                    elif result4 != None:
-                        valueSet = set()
-                        result4 = result4.split()
-                        for element in result2:
-                            if element != '-':
+                    if result1 != '':
+                        if result2 == '':
+                           self.yamlDict.update({result1 : None}) 
+                        elif result2 != '': # Find all values in YAML with format key: [value1, value2,...]
+                            valueSet = set()
+                            new_result2 = result2.split(',')
+                            for element in new_result2:
                                 element = element.strip('\"')
+                                element = element.strip()
                                 valueSet.add(element)
+                            self.yamlDict.update({result1 : valueSet})
 
-                elif StopIteration:
+                    # Find all values in YAML with format
+                    # key:
+                    # - value1
+                    # - value2
+                    # ...
+                    elif result3 != '':
+                        if result4 == '':
+                            self.yamlDict.update({result3 : None})
+                        elif result4 != '':
+                            valueSet = set()
+                            result4 = result4.split()
+                            for element in result2:
+                                if element != '-':
+                                    element = element.strip('\"')
+                                    valueSet.add(element)
+
+                    
                     return self.yamlDict
 
 
