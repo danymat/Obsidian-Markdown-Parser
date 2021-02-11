@@ -39,7 +39,7 @@ At the moment, I have implemented a basic parsing library.
 
 ### Parser
 
-- Usage
+#### Usage
 
 ```python
 from src.Parser import Parser
@@ -49,10 +49,44 @@ parser = Parser('/path/to/vault')
 #### Attributes
 
 - `mdFiles` Array of MarkdownFile in vault
+
 #### Methods
 
 - `findSubFilesForFiles(files)` returns a set of `MarkdownFile` linked with the **set** of `MarkdownFile` specified
 - `searchFilesWithTag(tag)` returns a set of `MarkdownFile` with a specified tag
+
+
+### YamlParser
+
+#### Usage
+
+```python
+from src.yamlParser import YamlParser
+
+# the file contents need to be read
+file = MarkdownFile
+file = self._openFile()
+self.fStream = file.read()
+file.close()
+
+findYAMLTags = YamlParser(self.fStream)
+# find all values for a particular key
+# this will return a set with the values that have "tags" as key
+values = findYAMLTags.findAllYAML("findvalue", "tags")
+
+
+yamlIterator = YamlParser(self.fStream)
+# return all keys and values as a dictionary with the key as string and its values as set
+print(yamlIterator.findAllYAML("iterate"))
+```
+
+#### Methods
+
+- `.findAllYAML()` with the parameters `"findvalue"` and `"{key}"` with `{key}`
+  as the YAML key returns the associated values as a set
+- `.findAllYAML()` with the parameter `"iterate"` will return all key-value
+  pairs in YAML as a dictionary with the key as a string and its associated
+  values as a set
 
 ### MarkdownFile
 
