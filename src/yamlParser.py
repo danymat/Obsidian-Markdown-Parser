@@ -51,21 +51,32 @@ class YamlParser:
                     if result3 == '' and result4 == '':
                     # Find all values in YAML with format key: [value1, value2,...]
                         valueSet = set()
+                        regex = re.compile(r'\b.+?\b')
                         new_result2 = result2.split(',')
                         for element in new_result2:
-                            element = element.strip('\"')
-                            element = element.strip()
-                            valueSet.add(element)
+                            if len(element) > 1:
+                                values = regex.findall(element)
+                                string = ''
+                                for value in values:
+                                    string += value
+                                valueSet.add(string)
+                                #element = element.strip('\"')
+                                #element = element.strip()
+                                #valueSet.add(element)
                         self.yamlDict.update({result1 : valueSet})
 
                     # yaml list in current pair
                     elif result1 == '' and result2 == '':
                         valueSet = set()
-                        new_result4 = result4.split()
+                        regex = re.compile(r'\b.+?\b')
+                        new_result4 = result4.split('\n')
                         for element in new_result4:
-                            if element != '-':
-                                element = element.strip('\"')
-                                valueSet.add(element)
+                            if len(element) > 1:
+                                values = regex.findall(element)
+                                string = ''
+                                for value in values:
+                                    string += value
+                                valueSet.add(string)
                         self.yamlDict.update({result3 : valueSet})
                     
             return self.yamlDict
@@ -100,19 +111,27 @@ class YamlParser:
 
         if result1 != None: # Find all values in YAML with format key: [value1, value2,...]
             new_result1 = result1.split(',')
+            regex = re.compile(r'\b.+?\b')
             for element in new_result1:
-                element = element.strip('\"')
-                element = element.strip()
-                self.values.add(element)
+                if len(element) > 1:
+                    values = regex.findall(element)
+                    string = ''
+                    for value in values:
+                        string += value
+                    self.values.add(string)
         # Find all values in YAML with format
         # key:
         # - value1
         # - value2
         # ...
         elif result2 != None:
-            result2 = result2.split()
-            for element in result2:
-                if element != '-':
-                    element = element.strip('\"')
-                    self.values.add(element)
+            new_result2 = result2.split('\n')
+            regex = re.compile(r'\b.+?\b')
+            for element in new_result2:
+                if len(element) > 1:
+                    values = regex.findall(element)
+                    string = ''
+                    for value in values:
+                        string += value
+                    self.values.add(string)
         return self.values
