@@ -38,11 +38,11 @@ class MarkdownFile:
         # the only thing passed to the class are the contents from above of every looped
         # file in the Parser class (example in .searchFilesWithTag())
         # the key has to be given as first argument in a string without the colon
-        findYAMLTags = YamlParser("tags", self.fStream)
+        findYAMLTags = YamlParser(self.fStream)
         # execute method to find tag in YamlParser; in the called method another
         # method is called to find the specific tags
         # returns None if no YAML is found in a file
-        values = findYAMLTags._findAllYAML("findvalue")
+        values = findYAMLTags._findAllYAML("findvalue", "tags")
         # if this is the case, then values is made a set so that the simple tags
         # can be added to it, because one can't add to NoneType
         if values == None:
