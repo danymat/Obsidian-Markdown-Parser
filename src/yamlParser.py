@@ -8,7 +8,7 @@ class YamlParser:
         self.result = None
         self.yamlDict = {}
         
-    def _findAllYAML(self, method, key=None):
+    def findAllYAML(self, method, key=None):
         if key != None:
             self._regexFindKey = rf'(?:(?<={key}:).*?\[(.+?)(?=\]))|(?:(?<={key}:).*\n((?:-\s.*\n?)+))'
 

@@ -73,26 +73,15 @@ file.close()
 findYAMLTags = YamlParser(self.fStream)
 # the first parameter ("findvalue") will choose to run ._findValueInYAML(), the second parameter is the key
 # this will return a set with the values
-values = findYAMLTags._findAllYAML("findvalue", "tags")
+values = findYAMLTags.findAllYAML("findvalue", "tags")
 
 # return all keys and values as a dictionary with the key as string and its values as set
 yamlIterator = YamlParser(self.fStream)
 # will call ._iterateYAML(), the parameter must be "iterate" and print it
-print(yamlIterator._findAllYAML("iterate"))
+print(yamlIterator.findAllYAML("iterate"))
 # prints the associated file name to the YAML; just for testing purposes
 print(self.fileName)
 ```
-
-#### Methods
-
-- `.findAllYAML()` with the parameters `"findvalue"` and `"{key}"` will call
-  `._findValueInYAML()` with `{key}` as the YAML key and return the values as a set
-- `.findAllYAML()` with the parameter `"iterate"` will call
-  `._iterateYAML()` and return all key-value pairs in YAML as a dictionary
-  with the key as a string and its associated values as a set
-
-
-
 
 ### MarkdownFile
 
