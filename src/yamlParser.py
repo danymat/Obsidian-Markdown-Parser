@@ -20,17 +20,13 @@ class YamlParser:
             return self._findValueInYAML()
         elif match != None and method == "iterate":
             self.result = match.group()
-            #print(self.result)
             return self._iterateYAML()
         else:
             return None
 
     def _iterateYAML(self):
-        # matches the entry associated with the given key in the YAML from ._findAllYAML
+        # matches all yaml entries in self.result
         match = re.findall(self._regexIterateYAML, self.result)
-        #print(match)
-        #print(next(match))
-        #iterSet = set(next(match))
         self.yamlDict = {}
 
         if match != None:
@@ -40,6 +36,7 @@ class YamlParser:
                 result2 = None
                 result3 = None
                 result4 = None
+                #print(pair)
 
                 if pair != None:
                     # matches key in array syntax
@@ -51,30 +48,8 @@ class YamlParser:
                     # matches values in list syntax
                     result4 = pair[-1]
 
-                    #print(result1)
-                    #print(result2)
-                    #print(result3)
-                    #print(result4)
-
-                    if result1 != '' and result3 != '':
-                        valueSet = set()
-                        new_result2 = result2.split(',')
-                        for element in new_result2:
-                            element = element.strip('\"')
-                            element = element.strip()
-                            valueSet.add(element)
-                        self.yamlDict.update({result1 : valueSet})
-
-                        valueSet2 = set()
-                        result4 = result4.split()
-                        for element in result2:
-                            if element != '-':
-                                element = element.strip('\"')
-                                valueSet2.add(element)
-                        self.yamlDict.update({result3 : valueSet2})
-
-
-                    elif result3 == '' and result4 == '':
+                    # yaml array in current pair
+                    if result3 == '' and result4 == '':
                     # Find all values in YAML with format key: [value1, value2,...]
                         valueSet = set()
                         new_result2 = result2.split(',')
@@ -84,15 +59,11 @@ class YamlParser:
                             valueSet.add(element)
                         self.yamlDict.update({result1 : valueSet})
 
-                    # Find all values in YAML with format
-                    # key:
-                    # - value1
-                    # - value2
-                    # ...
+                    # yaml list in current pair
                     elif result1 == '' and result2 == '':
                         valueSet = set()
-                        result4 = result4.split()
-                        for element in result2:
+                        new_result4 = result4.split()
+                        for element in new_result4:
                             if element != '-':
                                 element = element.strip('\"')
                                 valueSet.add(element)
