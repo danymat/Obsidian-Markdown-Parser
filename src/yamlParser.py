@@ -1,4 +1,9 @@
 import re
+from enum import Enum, auto
+
+class YAML_METHOD(Enum):
+    FIND_VALUE = auto()
+    ITERATE = auto()
 
 class YamlParser:
     def __init__(self, fStream):
@@ -7,18 +12,18 @@ class YamlParser:
         self.fStream = fStream
         self.result = None
         self.yamlDict = {}
-        
-    def findAllYAML(self, method, key=None):
+
+    def findAllYAML(self, method: YAML_METHOD, key=None):
         if key != None:
             self._regexFindKey = rf'(?:(?<={key}:).*?\[(.+?)(?=\]))|(?:(?<={key}:).*\n((?:-\s.*\n?)+))'
 
         # matches everything inside the frontmatter YAML (at least the first
         # occurence of --- this is matched ---)
         match = re.search(self._regexAllYAML, self.fStream)
-        if match != None and method == "findvalue":
+        if match != None and method == YAML_METHOD.FIND_VALUE:
             self.result = match.group()
             return self._findValueInYAML()
-        elif match != None and method == "iterate":
+        elif match != None and method == YAML_METHOD.ITERATE:
             self.result = match.group()
             return self._iterateYAML()
         else:
@@ -31,7 +36,7 @@ class YamlParser:
 
         if match != None:
             for pair in match:
-                # the results of the match groups will be saved here     
+                # the results of the match groups will be saved here
                 result1 = None
                 result2 = None
                 result3 = None
@@ -75,7 +80,7 @@ class YamlParser:
                                     string += value
                                 valueSet.add(string)
                         self.yamlDict.update({result3 : valueSet})
-                    
+
             return self.yamlDict
 
 

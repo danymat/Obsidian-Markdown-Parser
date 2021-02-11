@@ -1,7 +1,7 @@
 from src.Extractor import Extractor
 from src.MarkdownFile import MarkdownFile
 from src.Parser import Parser
-from src.yamlParser import YamlParser
+from src.YamlParser import YamlParser
 import os
 
 def testMarkdownsRetrieval():

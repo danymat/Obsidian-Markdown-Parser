@@ -1,5 +1,5 @@
 import re
-from src.yamlParser import YamlParser
+from src.YamlParser import YamlParser, YAML_METHOD
 
 class MarkdownFile:
     def __init__(self, fileName, filePath):
@@ -42,7 +42,7 @@ class MarkdownFile:
         # execute method to find tag in YamlParser; in the called method another
         # method is called to find the specific tags
         # returns None if no YAML is found in a file
-        values = findYAMLTags.findAllYAML("findvalue", "tags")
+        values = findYAMLTags.findAllYAML(YAML_METHOD.FIND_VALUE, "tags")
         # if this is the case, then values is made a set so that the simple tags
         # can be added to it, because one can't add to NoneType
         if values == None:
@@ -51,7 +51,7 @@ class MarkdownFile:
         #############################
         # quick test for yaml iterator
         # yamlIterator = YamlParser(self.fStream)
-        # print(yamlIterator.findAllYAML("iterate"))
+        # print(yamlIterator.findAllYAML(YAML_METHOD.ITERATE))
         # print(self.fileName)
         #############################
 

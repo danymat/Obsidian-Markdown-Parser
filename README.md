@@ -61,7 +61,7 @@ parser = Parser('/path/to/vault')
 #### Usage
 
 ```python
-from src.yamlParser import YamlParser
+from src.yamlParser import YamlParser, YAML_METHOD
 
 # the file contents need to be read
 file = MarkdownFile
@@ -72,19 +72,19 @@ file.close()
 findYAMLTags = YamlParser(self.fStream)
 # find all values for a particular key
 # this will return a set with the values that have "tags" as key
-values = findYAMLTags.findAllYAML("findvalue", "tags")
+values = findYAMLTags.findAllYAML(YAML_METHOD.FIND_VALUE, "tags")
 
 
 yamlIterator = YamlParser(self.fStream)
 # return all keys and values as a dictionary with the key as string and its values as set
-print(yamlIterator.findAllYAML("iterate"))
+print(yamlIterator.findAllYAML(YAML_METHOD.ITERATE))
 ```
 
 #### Methods
 
-- `.findAllYAML()` with the parameters `"findvalue"` and `"{key}"` with `{key}`
+- `.findAllYAML()` with the parameters `YAML_METHOD.FIND_VALUE` and `"{key}"` with `{key}`
   as the YAML key returns the associated values as a set
-- `.findAllYAML()` with the parameter `"iterate"` will return all key-value
+- `.findAllYAML()` with the parameter `YAML_METHOD.ITERATE` will return all key-value
   pairs in YAML as a dictionary with the key as a string and its associated
   values as a set
 
