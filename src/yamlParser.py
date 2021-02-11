@@ -56,34 +56,47 @@ class YamlParser:
                     #print(result3)
                     #print(result4)
 
-                    if result3 == '':
-                        #if result2 == '':
-                        #   self.yamlDict.update({result1 : None}) 
-                        if result4 == '': # Find all values in YAML with format key: [value1, value2,...]
-                            valueSet = set()
-                            new_result2 = result2.split(',')
-                            for element in new_result2:
+                    if result1 != '' and result3 != '':
+                        valueSet = set()
+                        new_result2 = result2.split(',')
+                        for element in new_result2:
+                            element = element.strip('\"')
+                            element = element.strip()
+                            valueSet.add(element)
+                        self.yamlDict.update({result1 : valueSet})
+
+                        valueSet2 = set()
+                        result4 = result4.split()
+                        for element in result2:
+                            if element != '-':
                                 element = element.strip('\"')
-                                element = element.strip()
-                                valueSet.add(element)
-                            self.yamlDict.update({result1 : valueSet})
+                                valueSet2.add(element)
+                        self.yamlDict.update({result3 : valueSet2})
+
+
+                    elif result3 == '' and result4 == '':
+                    # Find all values in YAML with format key: [value1, value2,...]
+                        valueSet = set()
+                        new_result2 = result2.split(',')
+                        for element in new_result2:
+                            element = element.strip('\"')
+                            element = element.strip()
+                            valueSet.add(element)
+                        self.yamlDict.update({result1 : valueSet})
 
                     # Find all values in YAML with format
                     # key:
                     # - value1
                     # - value2
                     # ...
-                    elif result1 == '':
-                        #if result4 == '':
-                        #    self.yamlDict.update({result3 : None})
-                        if result2 == '':
-                            valueSet = set()
-                            result4 = result4.split()
-                            for element in result2:
-                                if element != '-':
-                                    element = element.strip('\"')
-                                    valueSet.add(element)
-                            self.yamlDict.update({result3 : valueSet})
+                    elif result1 == '' and result2 == '':
+                        valueSet = set()
+                        result4 = result4.split()
+                        for element in result2:
+                            if element != '-':
+                                element = element.strip('\"')
+                                valueSet.add(element)
+                        self.yamlDict.update({result3 : valueSet})
                     
             return self.yamlDict
 
