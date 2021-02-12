@@ -50,9 +50,9 @@ class MarkdownFile:
 
         #############################
         # quick test for yaml iterator
-        # yamlIterator = YamlParser(self.fStream)
-        # print(yamlIterator.findAllYAML(YAML_METHOD.ITERATE))
-        # print(self.fileName)
+        yamlIterator = YamlParser(self.fStream)
+        print(yamlIterator.findAllYAML(YAML_METHOD.ITERATE))
+        print(self.fileName)
         #############################
 
         # find simple tags
