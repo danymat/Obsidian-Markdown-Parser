@@ -14,7 +14,14 @@ class Extractor:
         else:
             print(f'Exporting to {path}...')
 
-        zipObj = ZipFile(f'Exported_{zipName}.zip', 'w')
+        newFileName = ''
+        for character in zipName:
+            if character == '/':
+                newFileName += '-'
+            else:
+                newFileName += character
+
+        zipObj = ZipFile(f'Exported_{newFileName}.zip', 'w')
         print('###### FILES FOUND ######')
         for file in files:
             print(file.fileName)
