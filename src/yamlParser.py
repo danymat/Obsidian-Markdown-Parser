@@ -7,7 +7,8 @@ class YamlParser:
         self.fStream = fStream
         self.result = None
         self.yamlDict = {}
-        
+
+
     def findAllYAML(self, method, key=None):
         if key != None:
             self._regexFindKey = rf'(?:(?<={key}:).*?\[(.+?)(?=\]))|(?:(?<={key}:).*\n((?:-\s.*\n?)+))'
@@ -23,6 +24,7 @@ class YamlParser:
             return self._iterateYAML()
         else:
             return None
+
 
     def _iterateYAML(self):
         # matches all yaml entries in self.result
@@ -65,33 +67,7 @@ class YamlParser:
                             if len(element) > 1:
                                 valueSet.add(self._yamlEntries("list", element))
                         self.yamlDict.update({result3 : valueSet})
-                    
             return self.yamlDict
-
-    def _yamlEntries(self, type, element):
-        if type == "array":
-            element = element.split()
-            string = ''
-            for part in range(len(element)):
-                if element[part] == element[len(element) - 1]:
-                    string += element[part]
-                else:
-                    string += element[part] + ' '
-            string = string.strip('\"')
-            return string
-        elif type == "list":
-            element = element.split()
-            string = ''
-            for part in range(len(element)):
-                if element[part] != '-':
-                    if element[part] == element[len(element) - 1]:
-                        string += element[part]
-                    else:
-                        string += element[part] + ' '
-            string = string.strip('\"')
-            return string
-
-
 
 
     def _findValueInYAML(self) -> set:
@@ -120,7 +96,6 @@ class YamlParser:
             result1 = match.group(1)
             result2 = match.group(2)
 
-
         if result1 != None: # Find all values in YAML with format key: [value1, value2,...]
             new_result1 = result1.split(',')
             for element in new_result1:
@@ -137,3 +112,29 @@ class YamlParser:
                 if len(element) > 1:
                     self.values.add(self._yamlEntries("list", element))
         return self.values
+
+
+    def _yamlEntries(self, type, element):
+        if type == "array":
+            element = element.split()
+            string = ''
+            for part in range(len(element)):
+                if element[part] == element[len(element) - 1]:
+                    string += element[part]
+                else:
+                    string += element[part] + ' '
+            string = string.strip('\"')
+            return string
+        elif type == "list":
+            element = element.split()
+            string = ''
+            for part in range(len(element)):
+                if element[part] != '-':
+                    if element[part] == element[len(element) - 1]:
+                        string += element[part]
+                    else:
+                        string += element[part] + ' '
+            string = string.strip('\"')
+            return string
+        else:
+            return None
