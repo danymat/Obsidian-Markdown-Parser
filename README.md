@@ -109,5 +109,5 @@ this repository, and create a pull request from it. Below is the list of all con
 Contributors:
 
 - Daniel Mathiot ([danymat](https://github.com/danymat))
-
+- Christian Körtner ([archelpeg](https://github.com/archelpeg))
 
