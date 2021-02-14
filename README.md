@@ -1,39 +1,14 @@
-# Obsidian Extractor (obsd_extract)
+# Obsidian Markdown Parser
 
 ![(Github All Releases)](https://img.shields.io/github/downloads/danymat/Obsidian-Extractor/total)
 
-This script will create a zip of your vault, depending on the options you select.
+This repository will give you tools to parse and fetch useful informations of your notes in your Obsidian vault.
 
 ## Motives
 
-I like to keep my vault with only one folder inside. That means, it's a pain to copy only relevant files!
+I like to do some python scripts with my vault, so this repository is the tool I needed in order to parse my Markdown files.
 
 ## State of the Art
-
-At the moment, it supports:
-
-- Creating a zip file from a specified vault with a specific tag, with optional link following (YAML support)
-- Creating a zip file from the entire vault
-
-## Usage
-
-```bash
-python obsd_extract.py vaultFolder --tag yourTag
-```
-
-If you would like to follow links, add `-r` option at the end:
-
-```bash
-python obsd_extract.py vaultFolder --tag yourTag -r
-```
-
-If you would like to export all vault:
-
-```bash
-python obsd_extract.py vaultFolder
-```
-
-## Extended
 
 At the moment, I have implemented a basic parsing library.
 
@@ -121,11 +96,18 @@ filesWithSpecificTag = parser.searchFilesWithTag('tag1')
 
 New features I intent to add:
 
-- [X] Exporting full vault
-- [ ] Exporting vault from multiple tags
+
+- [ ] Add more tests 
+- [ ] Ignore .obsidian/ folder
 
 
 ## Contributing
 
 If you would like to add shiny new features, or correct bugs I unfortunately added, please fork
-this repository, and create a pull request from it.
+this repository, and create a pull request from it. Below is the list of all contributors for this repository, if you contributed please consider adding your name !
+
+Contributors:
+
+- Daniel Mathiot ([danymat](https://github.com/danymat))
+
+
