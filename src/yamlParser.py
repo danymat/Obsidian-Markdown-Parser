@@ -13,6 +13,7 @@ class YamlParser:
         self.result = None
         self.yamlDict = {}
 
+
     def findAllYAML(self, method: YAML_METHOD, key=None):
         if key != None:
             self._regexFindKey = rf'(?:(?<={key}:).*?\[(.+?)(?=\]))|(?:(?<={key}:).*\n((?:-\s.*\n?)+))'
@@ -28,6 +29,7 @@ class YamlParser:
             return self._iterateYAML()
         else:
             return None
+
 
     def _iterateYAML(self):
         # matches all yaml entries in self.result
@@ -56,30 +58,21 @@ class YamlParser:
                     if result3 == '' and result4 == '':
                     # Find all values in YAML with format key: [value1, value2,...]
                         valueSet = set()
-                        regex = re.compile(r'\b.+?\b')
                         new_result2 = result2.split(',')
                         for element in new_result2:
                             if len(element) > 1:
-                                values = regex.findall(element)
-                                string = ''
-                                for value in values:
-                                    string += value
-                                valueSet.add(string)
+                                valueSet.add(self._yamlEntries("array", element))
                         self.yamlDict.update({result1 : valueSet})
 
                     # yaml list in current pair
                     elif result1 == '' and result2 == '':
                         valueSet = set()
-                        regex = re.compile(r'\b.+?\b')
                         new_result4 = result4.split('\n')
                         for element in new_result4:
                             if len(element) > 1:
-                                values = regex.findall(element)
-                                string = ''
-                                for value in values:
-                                    string += value
-                                valueSet.add(string)
+                                valueSet.add(self._yamlEntries("list", element))
                         self.yamlDict.update({result3 : valueSet})
+
 
             return self.yamlDict
 
@@ -110,17 +103,11 @@ class YamlParser:
             result1 = match.group(1)
             result2 = match.group(2)
 
-
         if result1 != None: # Find all values in YAML with format key: [value1, value2,...]
             new_result1 = result1.split(',')
-            regex = re.compile(r'\b.+?\b')
             for element in new_result1:
                 if len(element) > 1:
-                    values = regex.findall(element)
-                    string = ''
-                    for value in values:
-                        string += value
-                    self.values.add(string)
+                    self.values.add(self._yamlEntries("array", element))
         # Find all values in YAML with format
         # key:
         # - value1
@@ -128,12 +115,33 @@ class YamlParser:
         # ...
         elif result2 != None:
             new_result2 = result2.split('\n')
-            regex = re.compile(r'\b.+?\b')
             for element in new_result2:
                 if len(element) > 1:
-                    values = regex.findall(element)
-                    string = ''
-                    for value in values:
-                        string += value
-                    self.values.add(string)
+                    self.values.add(self._yamlEntries("list", element))
         return self.values
+
+
+    def _yamlEntries(self, type, element):
+        if type == "array":
+            element = element.split()
+            string = ''
+            for part in range(len(element)):
+                if element[part] == element[len(element) - 1]:
+                    string += element[part]
+                else:
+                    string += element[part] + ' '
+            string = string.strip('\"')
+            return string
+        elif type == "list":
+            element = element.split()
+            string = ''
+            for part in range(len(element)):
+                if element[part] != '-':
+                    if element[part] == element[len(element) - 1]:
+                        string += element[part]
+                    else:
+                        string += element[part] + ' '
+            string = string.strip('\"')
+            return string
+        else:
+            return None
