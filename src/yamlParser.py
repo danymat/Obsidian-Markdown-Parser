@@ -134,13 +134,13 @@ class YamlParser:
             return string
         elif type == "list":
             element = element.split()
+            element.pop(0)
             string = ''
             for part in range(len(element)):
-                if element[part] != '-':
-                    if element[part] == element[len(element) - 1]:
-                        string += element[part]
-                    else:
-                        string += element[part] + ' '
+                if element[part] == element[len(element) - 1]:
+                    string += element[part]
+                else:
+                    string += element[part] + ' '
             string = string.strip('\"')
             return string
         else:
