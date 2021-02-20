@@ -17,14 +17,14 @@ class Parser:
         for dirpath, _, files in os.walk(self._folderPath):
             print(f'Found directory: {dirpath}, and ignored={self.isDirectoryIgnored(dirpath)}')
 
-            if not self.isDirectoryIgnored(dirpath):
+            if not self._isDirectoryIgnored(dirpath):
                 for file_name in files:
                     if file_name.endswith('.md'):
                         normalised_path = os.path.normpath(dirpath + "/" + file_name) # normalises path for current file system
                         file = MarkdownFile(file_name, normalised_path)
                         self.mdFiles.append(file)
 
-    def isDirectoryIgnored(self, directory: str):
+    def _isDirectoryIgnored(self, directory: str):
         """Returns a boolean indicating if the directory specified is in self._ignoredDirectories"""
 
         splitDirectory = directory.split('/')
