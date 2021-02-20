@@ -2,11 +2,11 @@ import os
 from src.MarkdownFile import MarkdownFile
 
 class Parser:
-    def __init__(self, folderPath='.'):
+    def __init__(self, folderPath='.', ignoredDirectories=['.obsidian', '.git']):
         self._folderPath = folderPath
+        self._ignoredDirectories = ignoredDirectories
         self.mdFiles = list[MarkdownFile]
         self._retrieveMarkdownFiles()
-
 
     def _retrieveMarkdownFiles(self):
         """Directory traversal to find all .md files and stores them in _mdFiles
@@ -15,12 +15,30 @@ class Parser:
         """
         self.mdFiles = []
         for dirpath, _, files in os.walk(self._folderPath):
-            # print(f'Found directory: {dirpath}')
-            for file_name in files:
-                if file_name.endswith('.md'):
-                    normalised_path = os.path.normpath(dirpath + "/" + file_name) # normalises path for current file system
-                    file = MarkdownFile(file_name, normalised_path)
-                    self.mdFiles.append(file)
+            print(f'Found directory: {dirpath}, and ignored={self.isDirectoryIgnored(dirpath)}')
+
+            if not self.isDirectoryIgnored(dirpath):
+                for file_name in files:
+                    if file_name.endswith('.md'):
+                        normalised_path = os.path.normpath(dirpath + "/" + file_name) # normalises path for current file system
+                        file = MarkdownFile(file_name, normalised_path)
+                        self.mdFiles.append(file)
+
+    def isDirectoryIgnored(self, directory: str):
+        """Returns a boolean indicating if the directory specified is in self._ignoredDirectories"""
+
+        splitDirectory = directory.split('/')
+        splitFolderPath = self._folderPath.split('/')
+
+        # Remove folderPath in order to search uniquely in subdirectories
+        for el in splitFolderPath:
+            splitDirectory.remove(el)
+
+        # Return if the subdirectory starts with a element in ignoredDirectories
+        if len(splitDirectory) != 0:
+            return splitDirectory[0] in self._ignoredDirectories
+        else:
+            return False
 
     def searchFilesWithTag(self, tag=None):
         """Find all files containing a specific tag
