@@ -21,6 +21,16 @@ from src.Parser import Parser
 parser = Parser('/path/to/vault')
 ```
 
+By default, the parser will ignore `.git` and `.obsidian` sub-directories.
+
+If you want to specify which directories to ignore, it has to be done at instanciation.
+
+```python
+parser = Parser('/path/to/vault', ignoredDirectories=['directory1', '.obsidian', '.git'])
+```
+
+Be careful, it will rewrite `.git` and `.obsidian`, so please add them back in the ignoredDirectories if you want to ignore them plus the ones you specified.
+
 #### Attributes
 
 - `mdFiles` Array of MarkdownFile in vault
@@ -96,9 +106,8 @@ filesWithSpecificTag = parser.searchFilesWithTag('tag1')
 
 New features I intent to add:
 
-
-- [ ] Add more tests 
-- [ ] Ignore .obsidian/ folder
+- [ ] Add more tests
+- [X] Ignore .obsidian/ folder
 
 
 ## Contributing
