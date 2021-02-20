@@ -15,7 +15,7 @@ class Parser:
         """
         self.mdFiles = []
         for dirpath, _, files in os.walk(self._folderPath):
-            print(f'Found directory: {dirpath}, and ignored={self.isDirectoryIgnored(dirpath)}')
+            # print(f'Found directory: {dirpath}, and ignored={self._isDirectoryIgnored(dirpath)}')
 
             if not self._isDirectoryIgnored(dirpath):
                 for file_name in files:
