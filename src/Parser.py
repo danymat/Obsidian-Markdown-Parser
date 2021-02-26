@@ -27,8 +27,10 @@ class Parser:
     def _isDirectoryIgnored(self, directory: str):
         """Returns a boolean indicating if the directory specified is in self._ignoredDirectories"""
 
+        directory = directory.replace('\\', '/')
+        normalisedFolderPath = self._folderPath.replace('\\', '/')
         splitDirectory = directory.split('/')
-        splitFolderPath = self._folderPath.split('/')
+        splitFolderPath = normalisedFolderPath.split('/')
 
         # Remove folderPath in order to search uniquely in subdirectories
         for el in splitFolderPath:
