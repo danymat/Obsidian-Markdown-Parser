@@ -73,6 +73,8 @@ print(yamlIterator.findAllYAML(YAML_METHOD.ITERATE))
   pairs in YAML as a dictionary with the key as a string and its associated
   values as a set
 
+Currently, the YAML parser is limited [(see the comments for details)](https://github.com/danymat/Obsidian-Markdown-Parser/blob/main/src/YamlParser.py).
+
 ### MarkdownFile
 
 #### Attributes
@@ -104,7 +106,7 @@ filesWithSpecificTag = parser.searchFilesWithTag('tag1')
 
 ## Roadmap
 
-New features I intent to add:
+New features I intend to add:
 
 - [ ] Add more tests
 - [X] Ignore .obsidian/ folder
@@ -118,5 +120,3 @@ this repository, and create a pull request from it. Below is the list of all con
 Contributors:
 
 - Daniel Mathiot ([danymat](https://github.com/danymat))
-- Christian Körtner ([archelpeg](https://github.com/archelpeg))
-
