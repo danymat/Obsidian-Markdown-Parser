@@ -1,9 +1,11 @@
 import re
 from src.YamlParser import YamlParser, YAML_METHOD
+from xml.etree.ElementTree import Element, ElementTree, SubElement
 
 class MarkdownFile:
     def __init__(self, fileName, filePath):
         self._regexFindLinks = r'(?<=\[\[).*?(?=(?:\]\]|#|\|))' # Thanks to https://github.com/archelpeg
+        self._regexFindHeaders = r'^\s*(#+)(\s+.*)'
         self.fileName = fileName
         self.path = filePath
         self.tags = self._findTags()
@@ -77,3 +79,47 @@ class MarkdownFile:
     def _openFile(self):
         """Open markdown file"""
         return open(self.path, "r", encoding="utf-8")
+    
+    def toXML(self):
+        file = self._openFile()
+        lines = file.readlines()
+        file.close()
+        
+        # Get the line numbers and header levels of each header
+        section_lines = []
+        section_levels = []
+        section_titles = []
+        for i, line in enumerate(lines):
+            match = re.match(self._regexFindHeaders, line)
+            if match is not None:
+                section_lines.append(i)
+                section_levels.append(len(match.group(1)))
+                section_titles.append(match.group(2).strip())
+        
+        root = Element('root', {'level': '0'})
+        parent_map = {}
+
+        current_node = root
+        section_ends = section_lines + [len(lines)]
+        current_node.text = "".join(lines[:section_ends[0]])
+        section_ends = section_ends[1:]
+
+        for section_start, level, title, section_end in zip(section_lines, section_levels, section_titles, section_ends):
+            while int(current_node.get('level')) >= level: 
+                current_node = parent_map[current_node]
+            section_node = SubElement(current_node, 'section', {'level': str(level), 'title': title})
+            parent_map[section_node] = current_node
+            section_node.text = "".join(lines[section_start:section_end])
+
+            current_node = section_node
+        
+        return ElementTree(root)
+    
+def xmlToMarkdownText(tree: ElementTree):
+    sections = []
+    for node in tree.iter():
+        if node.get('level') == '0':
+            continue
+        sections.append(node.text)
+    
+    return ''.join(sections)

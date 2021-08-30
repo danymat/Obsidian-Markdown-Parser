@@ -1,0 +1,14 @@
+<root level="0">Root level text.
+
+<section level="1" title="A good header"># A good header
+
+This header has good text.
+
+#bad header
+
+asdf # another bad header
+
+<section level="2" title="This is okay">    ## This is okay
+
+asdfasdf
+</section></section></root>

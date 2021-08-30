@@ -1,0 +1,22 @@
+<root level="0">Root level text.
+
+<section level="1" title="Header 1"># Header 1
+
+Level 1 text.
+
+<section level="2" title="Header 2">## Header 2
+
+Level 2 text.
+
+<section level="3" title="Header 3">### Header 3
+
+Level 3 text.
+
+<section level="6" title="Header 6">###### Header 6
+
+Level 6 text.
+
+</section></section></section></section><section level="1" title="Section 2"># Section 2
+
+Another section.
+</section></root>
